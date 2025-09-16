@@ -3,14 +3,16 @@ import bodyParser from "body-parser";
 import bcrypt from "bcryptjs";
 import pkg from "pg";
 import dotenv from "dotenv";
+import cors from "cors";  // <-- ADD THIS
 
 dotenv.config();
 const { Pool } = pkg;
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors()); // <-- ENABLE CORS FOR ALL ORIGINS (SAFE FOR DEV)
 
-// Connect to Postgres using env vars
+// DB Connection
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
   host: process.env.POSTGRES_HOST,
@@ -19,7 +21,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-// Simple login endpoint
+// Simple login route
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
